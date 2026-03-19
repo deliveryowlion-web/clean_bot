@@ -8,13 +8,14 @@ if not TOKEN:
 
 bot = Bot(token=TOKEN)
 
-@bot.message_handler(commands=['start'])
-async def start(msg):
-    await msg.answer("OK")
+@bot.on('message')
+async def handle_message(msg):
+    if msg.text == '/start':
+        await msg.answer('OK')
 
 async def main():
     print("Бот запущен")
-    await bot.polling()
+    await bot.run()
 
 if __name__ == "__main__":
     asyncio.run(main())
