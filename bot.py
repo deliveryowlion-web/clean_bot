@@ -1,21 +1,24 @@
-import os
-from maxapi import Bot
 import asyncio
+import logging
+from maxapi import Bot, Dispatcher
+from maxapi.types import MessageCreated
 
-TOKEN = os.getenv("MAX_BOT_TOKEN")
-if not TOKEN:
-    raise Exception("Токен не найден")
+logging.basicConfig(level=logging.INFO)
 
-bot = Bot(token=TOKEN)
+TOKEN = "f9LHodD0cOJnos0uZOxzAEFU_LtgF-yXP51MaD8UCriLK-vRWi01ZmjpcOK8tRBpjtEYuGDu7nik9zIoMOUm"  # Ваш токен
 
-@bot.on('message')
-async def handle_message(msg):
-    if msg.text == '/start':
-        await msg.answer('OK')
+bot = Bot(TOKEN)
+dp = Dispatcher()
+
+@dp.message_created()
+async def handle_start(event: MessageCreated):
+    if event.message.body and event.message.body.text == '/start':
+        await event.message.answer("OK")
+        print(f"Ответил на /start в чат {event.message.chat.id}")
 
 async def main():
     print("Бот запущен")
-    await bot.run()
+    await dp.start_polling(bot)
 
 if __name__ == "__main__":
     asyncio.run(main())
